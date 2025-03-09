@@ -1,9 +1,13 @@
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from game import Minesweeper
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+
+# Restrict CORS to frontend URL from environment variables
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")  # Default for local React
+CORS(app, resources={r"/*": {"origins": FRONTEND_URL}})
 
 games = {}
 
@@ -54,5 +58,9 @@ def flag():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+# Export app for Vercel (serverless function support)
+vercel_app = app
+
 if __name__ == '__main__':
-    app.run(debug=True, port=5000, host='0.0.0.0')
+    port = int(os.getenv("PORT", 5000))
+    app.run(debug=True, port=port, host='0.0.0.0')

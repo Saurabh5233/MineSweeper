@@ -12,7 +12,8 @@ const INITIAL_GAME_STATE: GameState = {
   flagged: 0
 };
 
-const API_BASE = import.meta.env.PROD ? '/api' : 'http://localhost:5000';
+// Use environment variable for API base
+const API_BASE = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
 function App() {
   const [gameId, setGameId] = useState<number | null>(null);
